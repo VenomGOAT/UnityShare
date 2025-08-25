@@ -49,6 +49,8 @@ public class MainGameScript : MonoBehaviour
         Players.Add(new Player(2));
 
         StartRound();
+
+        
     }
 
     void BuildDeck()
@@ -108,6 +110,12 @@ public class MainGameScript : MonoBehaviour
         }
 
         Debug.Log("Round started! Pot: " + pot);
+    }
+
+    public void DrawCardButtonPressed()
+    {
+        DrawCard(Players[0]);
+        GetComponent<AudioSource>().Play();
     }
 
     void DrawCard(Player player)
