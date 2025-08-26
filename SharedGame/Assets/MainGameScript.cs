@@ -8,12 +8,7 @@ public class MainGameScript : MonoBehaviour
     public class Player
     {
         public int PlayerNo;
-        public int crumbs = 100;
         public List<Card> Cards = new List<Card>();
-
-        public bool Busted = false;
-        public bool Banked = false;
-        
 
         public Player(int PlayerNo)
         {
@@ -38,7 +33,6 @@ public class MainGameScript : MonoBehaviour
 
     private List<Card> Deck = new List<Card>();
     private List<Player> Players = new List<Player>();
-    private int pot = 0;
 
     void Start()
     {
@@ -92,15 +86,10 @@ public class MainGameScript : MonoBehaviour
 
     void StartRound()
     {
-        pot = 0;
 
         foreach (var p in Players)
         {
-            p.crumbs -= 10;
-            pot += 10;
             p.Cards.Clear();
-            p.Busted = false;
-            p.Banked = false;
         }
 
         foreach (var p in Players)
@@ -108,8 +97,6 @@ public class MainGameScript : MonoBehaviour
             DrawCard(p);
             DrawCard(p);
         }
-
-        Debug.Log("Round started! Pot: " + pot);
     }
 
     public void DrawCardButtonPressed()
@@ -129,7 +116,7 @@ public class MainGameScript : MonoBehaviour
         Debug.Log("Player " + player.PlayerNo + " drew: " + card.name);
     }
 
-    void EndRound()
+    public void EndRound()
     {
         Player HighestPlayer = null;
         int BestScore = -99;
@@ -153,8 +140,7 @@ public class MainGameScript : MonoBehaviour
 
         if(HighestPlayer != null)
         {
-            HighestPlayer.crumbs += pot;
-            Debug.Log("Player" + HighestPlayer.PlayerNo + "Wins the game");
+            Debug.Log("Player" + HighestPlayer.PlayerNo + " Wins the game with score " + BestScore);
         }
         else
         {
