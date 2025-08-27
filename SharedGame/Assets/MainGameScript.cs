@@ -7,7 +7,7 @@ using static MainGameScript;
 
 public class MainGameScript : MonoBehaviour
 {
-
+    public static List<int> SelectedCardIndexes = new List<int>();
 
     public class Player
     {
@@ -80,10 +80,15 @@ public class MainGameScript : MonoBehaviour
         }
         UICardObjects.Clear();
 
-        foreach (var card in player.Cards)
+        for (int i = 0; i < player.Cards.Count; i++)
         {
+            var card = player.Cards[i];
             GameObject newCard = Instantiate(cardPrefab, PlayerHandPanel);
             newCard.name = card.name;
+
+            ToggleScript toggleScript = newCard.GetComponent<ToggleScript>();
+            toggleScript.CardIndex = i;
+
             UICardObjects.Add(newCard);
         }
     }

@@ -8,6 +8,8 @@ public class ToggleScript : MonoBehaviour
     private Toggle toggle;
     private Image image;
 
+    public int CardIndex;
+
     private Color NormalColor;
     public Color toggledColor = Color.yellow;
 
@@ -24,6 +26,19 @@ public class ToggleScript : MonoBehaviour
     void OnToggleChanged(bool isOn)
     {
         image.color = isOn ? toggledColor : NormalColor;
+
+        int index = transform.parent.GetSiblingIndex();
+
+        if (isOn && !MainGameScript.SelectedCardIndexes.Contains(CardIndex))
+        {
+            MainGameScript.SelectedCardIndexes.Add(CardIndex);
+        }
+        else
+        {
+            MainGameScript.SelectedCardIndexes.Remove(CardIndex);
+        }
+
+        Debug.Log("SelectedCardIndexes: " + string.Join(", ",MainGameScript.SelectedCardIndexes));
     }
 
 
