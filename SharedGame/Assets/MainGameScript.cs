@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using static MainGameScript;
 
 public class MainGameScript : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class MainGameScript : MonoBehaviour
     {
         public string name;
         public string rarity;
+        public int value { get; set; }
+
         public Card(string name, string rarity, int value)
         {
             this.name = name;
@@ -33,13 +36,11 @@ public class MainGameScript : MonoBehaviour
     }
     public class Cookie : Card
     {
-        public Card[] Ingredients = new Card[3]; 
-        public Cookie(string name, string rarity , int value , Card[]Ingredients)
+
+        public Card[] Ingredients { get; set; }
+
+        public Cookie(string name, string rarity, int value) : base(name, rarity, value)
         {
-            this.name = name;
-            this.rarity = rarity;
-            this.value = value;
-            this.Ingredients = Ingredients;
         }
     }
 
@@ -52,9 +53,19 @@ public class MainGameScript : MonoBehaviour
     private Card[] RareCards = { new Card("Caramel", "Rare", 4), new Card("PeanutButter", "Rare", 4), new Card("Marshmallow", "Rare", 4) };
     private Card[] LegendaryCards = { new Card("WhiteChocolate", "Legendary", 10), new Card("PistachioCream", "Legendary", 10), };
     private Card[] WildCards = { new Card("Sprinkles", "Wild", 0), new Card("MilkDunk", "Wild", 0), new Card("Salt", "Wild", 0), new Card("BurntEdge", "Wild", 0), new Card("CookieMonster", "Wild", 0) };
-    private Card[] Cookies = { new Cookie("BalancedBiscuit", "Basic", ,{CommonCards[0], CommonCards[1], CommonCards[2]}) ,new Cookie("" , "Cookie" , 20)new Cookie("BalancedBiscuit" , "Cookie" , 20)new Cookie("BalancedBiscuit" , "Cookie" , 20)
-    
-    
+
+    private Cookie[] Cookies = {
+            new Cookie("BalancedBiscuit", "Low",0),
+            new Cookie("RoyalBiscuit", "Medium",0),
+            new Cookie("PBJ", "Medium",0),
+            new Cookie("PistachioDelight","High",0)
+    };
+
+
+
+
+
+
     [Header("UI References")]
     public GameObject cardPrefab;
     public Transform PlayerHandPanel;
@@ -80,6 +91,7 @@ public class MainGameScript : MonoBehaviour
 
     void Start()
     {
+        BuildCookies();
         BuildDeck();
         Players.Add(new Player(1));
         Players.Add(new Player(2));
@@ -89,6 +101,46 @@ public class MainGameScript : MonoBehaviour
 
 
     }
+
+    void BuildCookies()
+    {
+        Cookies[0].Ingredients = new Card[] { CommonCards[0],CommonCards[1],CommonCards[2]};
+        Cookies[1].Ingredients = new Card[] { UncommonCards[1],UncommonCards[3]};
+        Cookies[2].Ingredients = new Card[] { RareCards[1], UncommonCards[0]};
+        Cookies[3].Ingredients = new Card[] { LegendaryCards[1],UncommonCards[2],CommonCards[0]};
+
+        foreach (var cookie in Cookies)
+        {
+            int CookieValue = 0;
+            int Multiplier = 0;
+            foreach(var ingredient in cookie.Ingredients)
+            {
+                CookieValue += ingredient.value;
+            }
+            CookieValue /= cookie.Ingredients.Length;
+
+            switch (cookie.rarity)
+            {
+                case "Low":
+                    Multiplier = 4;
+                    break;
+                case "Medium":
+                    Multiplier = 6;
+                    break;
+                case "High":
+                    Multiplier = 8;
+                    break;
+            }
+            
+            CookieValue *= Multiplier;
+
+            cookie.value = CookieValue;
+
+            Debug.Log($"Cookie : {cookie.name} , Value : {CookieValue}");
+        }
+    }
+
+
 
     void BuildDeck()
     {
@@ -184,6 +236,7 @@ public class MainGameScript : MonoBehaviour
         Debug.Log("Player " + player.PlayerNo + " drew: " + card.name);
     }
     
+
     public void BakeButtonPressed()
     {
         Bake(Players[0]);
