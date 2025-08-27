@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq; 
 using static MainGameScript;
 
 public class MainGameScript : MonoBehaviour
@@ -104,9 +105,49 @@ public class MainGameScript : MonoBehaviour
         StartRound();
         UpdateHandUI(Players[0]);
 
-
     }
 
+    void Update()
+    {
+        if (SelectedCardIndexes.Count == 1 && Players[0].Cards[SelectedCardIndexes[0]].rarity == "Wild")
+        {
+            Debug.Log($"Wild Card Selected");
+        }
+        else if (SelectedCardIndexes.Count <= 4 && SelectedCardIndexes.Count >= 2)
+        {
+            (bool IsRecipe, Cookie CookieBaked) = CheckRecipe(SelectedCardIndexes, Players[0].Cards);
+
+            if (IsRecipe)
+            {
+                Debug.Log($"{CookieBaked.name} can be baked");
+                //All bake option whateever
+            }
+        }
+    }
+
+    (bool,Cookie) CheckRecipe(List<int> Indexes , List<Card> Cards)
+    {
+        
+        foreach(Cookie cookie in Cookies)
+        {
+            int IngredientsFound = 0;
+            Card[] Ingredients = cookie.Ingredients;
+            foreach(int index in Indexes)
+            {
+                Card Ingredient = Cards[index];
+                if (Ingredients.Contains(Ingredient))
+                {
+                    IngredientsFound++;
+                }
+            }
+            if(IngredientsFound == Indexes.Count)
+            {
+                return (true, cookie);
+            }
+        }
+
+        return (false, null);
+    }
     void BuildCookies()
     {
         Cookies[0].Ingredients = new Card[] { CommonCards[0],CommonCards[1],CommonCards[2]};
@@ -138,7 +179,7 @@ public class MainGameScript : MonoBehaviour
             }
             
             CookieValue *= Multiplier;
-
+            
             cookie.value = CookieValue;
 
             Debug.Log($"Cookie : {cookie.name} , Value : {CookieValue}");
@@ -172,7 +213,7 @@ public class MainGameScript : MonoBehaviour
         {
             CardGenerated = CommonCards[Random.Range(0, CommonCards.Length)];
         }
-        else if (rand <= 70)
+        else if (rand <=70)
         {
             CardGenerated = UncommonCards[Random.Range(0, UncommonCards.Length)];
         }
