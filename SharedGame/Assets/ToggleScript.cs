@@ -38,7 +38,7 @@ public class ToggleScript : MonoBehaviour
             MainGameScript.SelectedCardIndexes.Remove(CardIndex);
         }
 
-        Debug.Log("SelectedCardIndexes: " + string.Join(", ",MainGameScript.SelectedCardIndexes));
+        //Debug.Log("SelectedCardIndexes: " + string.Join(", ",MainGameScript.SelectedCardIndexes));
     }
 
 
