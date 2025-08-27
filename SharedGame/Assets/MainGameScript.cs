@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class MainGameScript : MonoBehaviour
 {
+    
 
     public class Player
     {
@@ -34,6 +37,29 @@ public class MainGameScript : MonoBehaviour
     private List<Card> Deck = new List<Card>();
     private List<Player> Players = new List<Player>();
 
+    [Header("UI References")]
+    public GameObject cardPrefab;
+    public Transform PlayerHandPanel;
+
+    private List<GameObject> UICardObjects = new List<GameObject>();
+
+    void UpdateHandUI(Player player)
+    {
+        foreach (var obj in UICardObjects)
+        {
+            Destroy(obj);
+        }
+        UICardObjects.Clear();
+
+        foreach (var card in player.Cards)
+        {
+            GameObject newCard = Instantiate(cardPrefab, PlayerHandPanel);
+            newCard.name = card.name;
+            UICardObjects.Add(newCard);
+        }
+    }
+    
+
     void Start()
     {
         BuildDeck();
@@ -43,6 +69,7 @@ public class MainGameScript : MonoBehaviour
         Players.Add(new Player(2));
 
         StartRound();
+        UpdateHandUI(Players[0]);
 
         
     }
@@ -101,14 +128,17 @@ public class MainGameScript : MonoBehaviour
 
     public void DrawCardButtonPressed()
     {
-        DrawCard(Players[0]);
-        GetComponent<AudioSource>().Play();
+        if (Deck.Count > 0 && Players[0].Cards.Count < 7)
+        {
+            DrawCard(Players[0]);
+            UpdateHandUI(Players[0]);
+            GetComponent<AudioSource>().Play();
+        }
+        
     }
 
     void DrawCard(Player player)
     {
-        if (Deck.Count == 0) return;
-
         Card card = Deck[0];
         Deck.RemoveAt(0);
 
@@ -140,7 +170,7 @@ public class MainGameScript : MonoBehaviour
 
         if(HighestPlayer != null)
         {
-            Debug.Log("Player" + HighestPlayer.PlayerNo + " Wins the game with score " + BestScore);
+            Debug.Log("Player " + HighestPlayer.PlayerNo + " Wins the game with score " + BestScore);
         }
         else
         {
