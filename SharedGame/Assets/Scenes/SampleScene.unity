@@ -452,7 +452,7 @@ GameObject:
   - component: {fileID: 297801022}
   - component: {fileID: 297801025}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Bake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -523,7 +523,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1137496067}
         m_TargetAssemblyTypeName: MainGameScript, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: BakeButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -796,7 +796,7 @@ GameObject:
   - component: {fileID: 816056935}
   - component: {fileID: 816056934}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: Draw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -928,7 +928,7 @@ GameObject:
   - component: {fileID: 855129307}
   - component: {fileID: 855129306}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: End Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1296,7 +1296,7 @@ GameObject:
   - component: {fileID: 1180941999}
   - component: {fileID: 1180941998}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: Use Ability
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

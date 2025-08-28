@@ -61,11 +61,6 @@ public class MainGameScript : MonoBehaviour
             new Cookie("PistachioDelight","High",0)
     };
 
-
-
-
-
-
     [Header("UI References")]
     public GameObject cardPrefab;
     public Transform PlayerHandPanel;
@@ -113,14 +108,13 @@ public class MainGameScript : MonoBehaviour
         {
             Debug.Log($"Wild Card Selected");
         }
-        else if (SelectedCardIndexes.Count <= 4 && SelectedCardIndexes.Count >= 2)
+        else if (SelectedCardIndexes.Count >= 2)
         {
             (bool IsRecipe, Cookie CookieToBake) = CheckRecipe(SelectedCardIndexes, Players[0].Cards);
             if (IsRecipe)
             {
                 Debug.Log($"{CookieToBake.name} can be baked");
                 ClickableScript.CanInteract = true;
-
             }
         }
     }
@@ -289,12 +283,18 @@ public class MainGameScript : MonoBehaviour
         UpdateHandUI(Players[0]);
 
     }
+
     void Bake(Player player)
     {
-        foreach(int index in SelectedCardIndexes)
+        foreach (int index in SelectedCardIndexes)
         {
-            player.Cards.RemoveAt(index);
+            if (index >= 0 && index < player.Cards.Count)
+            {
+                player.Cards.RemoveAt(index);
+            }
         }
+        SelectedCardIndexes.Clear();
+        
         /*Debug.Log($"{CookieToBake.name} is now being baked in the oven");
         SelectedCardIndexes.Clear();
         player.Oven.Add(CookieToBake);*/
