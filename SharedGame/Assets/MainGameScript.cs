@@ -140,7 +140,7 @@ public class MainGameScript : MonoBehaviour
                     IngredientsFound++;
                 }
             }
-            if(IngredientsFound == Indexes.Count)
+            if(IngredientsFound == Ingredients.Length)
             {
                 return (true, cookie);
             }
