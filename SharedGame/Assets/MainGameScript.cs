@@ -9,12 +9,11 @@ using static MainGameScript;
 public class MainGameScript : MonoBehaviour
 {
     public static List<int> SelectedCardIndexes = new List<int>();
-
     public class Player
     {
         public int PlayerNo;
         public List<Card> Cards = new List<Card>();
-        public List<Card> Oven = new List<Card>(); //Added an oven for each player
+        public List<Cookie> Oven = new List<Cookie>(); //Added an oven for each player
         public Player(int PlayerNo)
         {
             this.PlayerNo = PlayerNo;
@@ -39,7 +38,7 @@ public class MainGameScript : MonoBehaviour
     {
 
         public Card[] Ingredients { get; set; }
-
+        
         public Cookie(string name, string rarity, int value) : base(name, rarity, value)
         {
         }
@@ -97,6 +96,7 @@ public class MainGameScript : MonoBehaviour
 
     void Start()
     {
+        ClickableScript.CanInteract = false;
         BuildCookies();
         BuildDeck();
         Players.Add(new Player(1));
@@ -115,12 +115,12 @@ public class MainGameScript : MonoBehaviour
         }
         else if (SelectedCardIndexes.Count <= 4 && SelectedCardIndexes.Count >= 2)
         {
-            (bool IsRecipe, Cookie CookieBaked) = CheckRecipe(SelectedCardIndexes, Players[0].Cards);
-
+            (bool IsRecipe, Cookie CookieToBake) = CheckRecipe(SelectedCardIndexes, Players[0].Cards);
             if (IsRecipe)
             {
-                Debug.Log($"{CookieBaked.name} can be baked");
-                //All bake option whateever
+                Debug.Log($"{CookieToBake.name} can be baked");
+                ClickableScript.CanInteract = true;
+
             }
         }
     }
@@ -140,7 +140,7 @@ public class MainGameScript : MonoBehaviour
                     IngredientsFound++;
                 }
             }
-            if(IngredientsFound == Ingredients.Length)
+            if(IngredientsFound == Ingredients.Length && IngredientsFound == Indexes.Count)
             {
                 return (true, cookie);
             }
@@ -291,12 +291,13 @@ public class MainGameScript : MonoBehaviour
     }
     void Bake(Player player)
     {
-        
-        //First the user clicks bake
-        //Then selects the three cards, if it is a set they can bake it
-        //If not then invalid and choose a valid pair
-        //We then update UI so that the cards are removed and in following turns they can remove the cookie
-        
+        foreach(int index in SelectedCardIndexes)
+        {
+            player.Cards.RemoveAt(index);
+        }
+        /*Debug.Log($"{CookieToBake.name} is now being baked in the oven");
+        SelectedCardIndexes.Clear();
+        player.Oven.Add(CookieToBake);*/
     }
 
     //We have drawing card capabilities
