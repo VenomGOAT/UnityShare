@@ -133,7 +133,7 @@ public class MainGameScript : MonoBehaviour
             (bool IsRecipe, Cookie CookieToBake) = CheckRecipe(SelectedCardIndexes, Players[0].Cards);
             if (IsRecipe)
             {
-                Debug.Log($"{CookieToBake.name} can be baked");
+                //Debug.Log($"{CookieToBake.name} can be baked");
                 ClickableScript.CanInteract = true;
             }
         }
@@ -279,6 +279,19 @@ public class MainGameScript : MonoBehaviour
             DrawCard(p);
         }
     }
+    void AIMakesATurn()
+    {
+        //put the AI in here, current system is random
+
+        if (Players[1].Cards.Count < 8)
+        {
+            DrawCard(Players[1]);
+        }
+        else
+        {
+            DeleteCard(Players[1], 0);
+        } 
+    }
 
     public void DrawCardButtonPressed()
     {
@@ -288,23 +301,33 @@ public class MainGameScript : MonoBehaviour
             UpdateHandUI(Players[0]);
             GetComponent<AudioSource>().Play();
         }
-
+        AIMakesATurn();
     }
 
     void DrawCard(Player player)
     {
-        Card card = Deck[0];
-        Deck.RemoveAt(0);
+        if (Deck.Count > 0)
+        {
+            Card card = Deck[0];
+            Deck.RemoveAt(0);
 
-        player.Cards.Add(card);
-        Debug.Log("Player " + player.PlayerNo + " drew: " + card.name);
+            player.Cards.Add(card);
+            Debug.Log("Player " + player.PlayerNo + " drew: " + card.name);
+        }
+        else
+        {
+            Debug.Log("Deck is Empty!");
+        }
+
+        
     }
-    
+
 
     public void BakeButtonPressed()
     {
         Bake(Players[0]);
         UpdateHandUI(Players[0]);
+        AIMakesATurn();
 
     }
 
@@ -312,7 +335,7 @@ public class MainGameScript : MonoBehaviour
     {
         foreach (int index in SelectedCardIndexes)
         {
-            DeleteCard(index);
+            DeleteCard(Players[0], index);
         }
         SelectedCardIndexes.Clear();
         
@@ -329,16 +352,17 @@ public class MainGameScript : MonoBehaviour
 
             if (SelectedCard.rarity == "Wild")
             {
-                UseAbility(SelectedCard);
+                UseAbility(Players[0], SelectedCard);
             }
             else
             {
-                DeleteCard(index);
+                DeleteCard(Players[0], index);
             }
         }
         UpdateHandUI(Players[0]);
+        AIMakesATurn();
     }
-    void UseAbility(Card WildCard)
+    void UseAbility(Player player, Card WildCard)
     {
         switch (WildCard.name)
         {
@@ -361,14 +385,14 @@ public class MainGameScript : MonoBehaviour
                 Debug.Log($"{WildCard.name} -> ability not implemented yet");
                 break;
         }
-        Players[0].Cards.Remove(WildCard);
+        player.Cards.Remove(WildCard);
 
     }
-    void DeleteCard(int index)
+    void DeleteCard(Player player, int index)
     {
-        if (index >= 0 && index < Players[0].Cards.Count)
+        if (index >= 0 && index < player.Cards.Count)
         {
-            Players[0].Cards.RemoveAt(index);
+            player.Cards.RemoveAt(index);
         }
 
     }
