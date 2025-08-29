@@ -281,7 +281,7 @@ public class MainGameScript : MonoBehaviour
     }
     void AIMakesATurn()
     {
-        //put the AI in here, current system is random
+        //put the AI in here, current system is a dummy, used just for testing. 
 
         if (Players[1].Cards.Count < 8)
         {
