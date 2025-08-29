@@ -16,6 +16,7 @@ public class MainGameScript : MonoBehaviour
         public int PlayerNo;
         public List<Card> Cards = new List<Card>();
         public List<Cookie> Oven = new List<Cookie>(); //Added an oven for each player
+        public List<Cookie> CanBake = new List<Cookie>();
         public Player(int PlayerNo)
         {
             this.PlayerNo = PlayerNo;
@@ -109,6 +110,7 @@ public class MainGameScript : MonoBehaviour
 
     void Update()
     {
+        Players[0].CanBake.Clear();
         AbilityButton.interactable = (SelectedCardIndexes.Count == 1);
 
         if (SelectedCardIndexes.Count == 1)
@@ -130,35 +132,43 @@ public class MainGameScript : MonoBehaviour
 
         else if (SelectedCardIndexes.Count >= 2)
         {
-            (bool IsRecipe, Cookie CookieToBake) = CheckRecipe(SelectedCardIndexes, Players[0].Cards);
+            List<Card> IngredientsSelected = new List<Card>();
+            foreach(int index in SelectedCardIndexes)
+            {
+                IngredientsSelected.Add(Players[0].Cards[index]);
+            }
+
+            (bool IsRecipe, Cookie CookieToBake) = CheckRecipe(IngredientsSelected);
             if (IsRecipe)
             {
-                //Debug.Log($"{CookieToBake.name} can be baked");
+                Players[0].CanBake.Add(CookieToBake);
                 ClickableScript.CanInteract = true;
+                Debug.Log($"Can bake {Players[0].CanBake[0].name}");
             }
         }
         else
         {
             ClickableScript.CanInteract = false;
         }
+
+        
     }
 
-    (bool,Cookie) CheckRecipe(List<int> Indexes , List<Card> Cards)
+    (bool,Cookie) CheckRecipe(List<Card> IngredientsSelected)
     {
         
         foreach(Cookie cookie in Cookies)
         {
             int IngredientsFound = 0;
             Card[] Ingredients = cookie.Ingredients;
-            foreach(int index in Indexes)
+            foreach(Card Ingredient in IngredientsSelected)
             {
-                Card Ingredient = Cards[index];
                 if (Ingredients.Contains(Ingredient))
                 {
                     IngredientsFound++;
                 }
             }
-            if(IngredientsFound == Ingredients.Length && IngredientsFound == Indexes.Count)
+            if(IngredientsFound == Ingredients.Length && IngredientsFound == IngredientsSelected.Count)
             {
                 return (true, cookie);
             }
@@ -282,8 +292,14 @@ public class MainGameScript : MonoBehaviour
     void AIMakesATurn()
     {
         //put the AI in here, current system is a dummy, used just for testing. 
-
-        if (Players[1].Cards.Count < 8)
+        (bool HasCookie, Cookie AICookie) = AICanMakeCookie(Players[1].Cards);
+        Debug.Log($"AI can make cookie {HasCookie} , {AICookie}");
+        if (HasCookie)
+        {
+            Players[1].CanBake.Add(AICookie);
+            Bake(Players[1]);
+        }
+        else if (Players[1].Cards.Count < 8)
         {
             DrawCard(Players[1]);
         }
@@ -293,6 +309,23 @@ public class MainGameScript : MonoBehaviour
         } 
     }
 
+    (bool CanMakeCookie , Cookie AICookie) AICanMakeCookie(List<Card> Cards)
+    {
+        foreach(Cookie cookie in Cookies)
+        {
+            int IngredientsFound = 0;
+            foreach(Card Ingredient in cookie.Ingredients)
+            {
+                if(Cards.Contains(Ingredient)) IngredientsFound++;
+            }
+            if(IngredientsFound == cookie.Ingredients.Length)
+            {
+                return (true, cookie);
+            }
+        }
+
+        return (false, null);
+    }
     public void DrawCardButtonPressed()
     {
         if (Deck.Count > 0 && Players[0].Cards.Count < 7)
@@ -301,6 +334,7 @@ public class MainGameScript : MonoBehaviour
             UpdateHandUI(Players[0]);
             GetComponent<AudioSource>().Play();
         }
+        //If a player draws card but hand is full it skips their go. It should not let ai go, it should tell the user  to play a card or do something else 
         AIMakesATurn();
     }
 
@@ -326,6 +360,7 @@ public class MainGameScript : MonoBehaviour
     public void BakeButtonPressed()
     {
         Bake(Players[0]);
+
         UpdateHandUI(Players[0]);
         AIMakesATurn();
 
@@ -333,15 +368,28 @@ public class MainGameScript : MonoBehaviour
 
     void Bake(Player player)
     {
-        foreach (int index in SelectedCardIndexes)
-        {
-            DeleteCard(Players[0], index);
-        }
-        SelectedCardIndexes.Clear();
+
+        player.Oven.Add(player.CanBake[0]);
         
-        /*Debug.Log($"{CookieToBake.name} is now being baked in the oven");
-        SelectedCardIndexes.Clear();
-        player.Oven.Add(CookieToBake);*/
+
+        if (player.PlayerNo == 1)
+        {
+            foreach (int index in SelectedCardIndexes)
+            {
+                DeleteCard(Players[0], index);
+            }
+            SelectedCardIndexes.Clear();
+        }
+        else
+        {
+            foreach(Card Ingredient in player.CanBake[0].Ingredients)
+            {
+                player.Cards.Remove(Ingredient);
+            }
+        }
+
+        player.CanBake.Clear();
+        Debug.Log($"{player.Oven[0].name} is now being baked in the oven for player {player.PlayerNo}");
     }
     public void UseAbilityButtonPressed()
     {
