@@ -5,11 +5,13 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq; 
 using static MainGameScript;
+using Unity.VisualScripting;
 
 public class MainGameScript : MonoBehaviour
 {
-    public static List<int> SelectedCardIndexes = new List<int>(); 
-
+    public static List<int> SelectedCardIndexes = new List<int>();
+    public static List<int> SelectedCookiesIndexes = new List<int>();
+    public int round = 1;
 
     public class Player
     {
@@ -41,6 +43,7 @@ public class MainGameScript : MonoBehaviour
     {
 
         public Card[] Ingredients { get; set; }
+        public int RoundsBaked { get; set; }
         
         public Cookie(string name, string rarity, int value) : base(name, rarity, value)
         {
@@ -110,6 +113,7 @@ public class MainGameScript : MonoBehaviour
 
     void Update()
     {
+        Debug.Log($"round : {round}");
         Players[0].CanBake.Clear();
         AbilityButton.interactable = (SelectedCardIndexes.Count == 1);
 
@@ -306,7 +310,8 @@ public class MainGameScript : MonoBehaviour
         else
         {
             DeleteCard(Players[1], 0);
-        } 
+        }
+        round++;
     }
 
     (bool CanMakeCookie , Cookie AICookie) AICanMakeCookie(List<Card> Cards)
@@ -387,9 +392,20 @@ public class MainGameScript : MonoBehaviour
                 player.Cards.Remove(Ingredient);
             }
         }
-
+        player.Oven.Last().RoundsBaked = round;
         player.CanBake.Clear();
-        Debug.Log($"{player.Oven[0].name} is now being baked in the oven for player {player.PlayerNo}");
+        Debug.Log($"{player.Oven.Last()} is now being baked in the oven for player {player.PlayerNo}");
+    }
+
+    void TakeOutOven(Player player)
+    {
+        foreach(int index in SelectedCookiesIndexes)
+        {
+            Cookie CookieInOven = player.Oven[index];
+            CookieInOven.RoundsBaked = round - CookieInOven.RoundsBaked;
+            CookieInOven.value =(int)(CookieInOven.value*(1 + (double)(CookieInOven.RoundsBaked / 100)));
+            player.Oven.RemoveAt(index);
+        }
     }
     public void UseAbilityButtonPressed()
     {
