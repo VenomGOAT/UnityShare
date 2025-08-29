@@ -19,6 +19,7 @@ public class MainGameScript : MonoBehaviour
         public List<Card> Cards = new List<Card>();
         public List<Cookie> Oven = new List<Cookie>(); //Added an oven for each player
         public List<Cookie> CanBake = new List<Cookie>();
+        public bool MilkDunkActive = false;
         public Player(int PlayerNo)
         {
             this.PlayerNo = PlayerNo;
@@ -113,7 +114,6 @@ public class MainGameScript : MonoBehaviour
 
     void Update()
     {
-        Debug.Log($"round : {round}");
         Players[0].CanBake.Clear();
         AbilityButton.interactable = (SelectedCardIndexes.Count == 1);
 
@@ -355,7 +355,7 @@ public class MainGameScript : MonoBehaviour
         }
         else
         {
-            Debug.Log("Deck is Empty!");
+            EndRound();
         }
 
         
@@ -432,17 +432,17 @@ public class MainGameScript : MonoBehaviour
         {
             case "Sprinkles":
                 Debug.Log("Sprinkles Ability");
-                //code ability here
+                Sprinkles(player);
                 break;
 
             case "MilkDunk":
                 Debug.Log("MilkDunk Ability");
-                //code ability here
+                MilkDunk(player);
                 break;
 
             case "CookieMonster":
                 Debug.Log("CookieMonster Ability");
-                //code ability here
+                CookieMonster(player);
                 break;
 
             default:
@@ -451,6 +451,17 @@ public class MainGameScript : MonoBehaviour
         }
         player.Cards.Remove(WildCard);
 
+    }
+    void Sprinkles(Player player)
+    {
+        //User will click which one they want and then confirm then it will change to that
+    }
+    void MilkDunk(Player player)
+    {
+        player.MilkDunkActive = true;
+    }
+    void CookieMonster(Player player)
+    {
     }
     void DeleteCard(Player player, int index)
     {
@@ -493,7 +504,7 @@ public class MainGameScript : MonoBehaviour
         }
         else
         {
-            Debug.Log("No winner this round");
+            Debug.Log("It is the tie. Both players have gotten the same score");
         }
 
 
@@ -501,15 +512,7 @@ public class MainGameScript : MonoBehaviour
         {
             int score = 0;
             foreach (var card in Cards) score += card.value;
-            //calculates basic value
-
-            bool hasJam = Cards.Exists(c => c.name == "Jam");
-            bool hasPeanutButter = Cards.Exists(c => c.name == "PeanutButter");
-
-            if (hasJam && hasPeanutButter) score += 10; //PB+J combo
-
-            //add bonus points for combos -> we can add more combos 
-
+            //calculates basic value    
             return score;
         }
     }
