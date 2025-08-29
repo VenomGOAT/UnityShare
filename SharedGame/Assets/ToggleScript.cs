@@ -27,13 +27,11 @@ public class ToggleScript : MonoBehaviour
     {
         image.color = isOn ? toggledColor : NormalColor;
 
-        int index = transform.parent.GetSiblingIndex();
-
         if (isOn && !MainGameScript.SelectedCardIndexes.Contains(CardIndex))
         {
             MainGameScript.SelectedCardIndexes.Add(CardIndex);
         }
-        else
+        else if (!isOn && MainGameScript.SelectedCardIndexes.Contains(CardIndex))
         {
             MainGameScript.SelectedCardIndexes.Remove(CardIndex);
         }

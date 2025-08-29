@@ -1172,6 +1172,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 1519975446267921105, guid: 135067748e26ee44e941da7366f5210f, type: 3}
   PlayerHandPanel: {fileID: 11836892}
+  AbilityButton: {fileID: 1180941998}
 --- !u!4 &1137496068
 Transform:
   m_ObjectHideFlags: 0
@@ -1367,7 +1368,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1137496067}
         m_TargetAssemblyTypeName: MainGameScript, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: UseAbilityButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

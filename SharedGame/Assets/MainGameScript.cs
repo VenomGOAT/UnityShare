@@ -8,7 +8,9 @@ using static MainGameScript;
 
 public class MainGameScript : MonoBehaviour
 {
-    public static List<int> SelectedCardIndexes = new List<int>();
+    public static List<int> SelectedCardIndexes = new List<int>(); 
+
+
     public class Player
     {
         public int PlayerNo;
@@ -64,11 +66,14 @@ public class MainGameScript : MonoBehaviour
     [Header("UI References")]
     public GameObject cardPrefab;
     public Transform PlayerHandPanel;
+    public Button AbilityButton;
 
     private List<GameObject> UICardObjects = new List<GameObject>();
 
     void UpdateHandUI(Player player)
     {
+        MainGameScript.SelectedCardIndexes.Clear();
+
         foreach (var obj in UICardObjects)
         {
             Destroy(obj);
@@ -104,10 +109,25 @@ public class MainGameScript : MonoBehaviour
 
     void Update()
     {
-        if (SelectedCardIndexes.Count == 1 && Players[0].Cards[SelectedCardIndexes[0]].rarity == "Wild")
+        AbilityButton.interactable = (SelectedCardIndexes.Count == 1);
+
+        if (SelectedCardIndexes.Count == 1)
         {
-            Debug.Log($"Wild Card Selected");
+            int index = SelectedCardIndexes[0];
+
+            if (index >= 0 && index < Players[0].Cards.Count)
+            {
+                if (Players[0].Cards[index].rarity == "Wild")
+                {
+                    Debug.Log($"Wild Card Selected");
+                }
+            }
+            else
+            {
+                SelectedCardIndexes.Clear();
+            }
         }
+
         else if (SelectedCardIndexes.Count >= 2)
         {
             (bool IsRecipe, Cookie CookieToBake) = CheckRecipe(SelectedCardIndexes, Players[0].Cards);
@@ -116,6 +136,10 @@ public class MainGameScript : MonoBehaviour
                 Debug.Log($"{CookieToBake.name} can be baked");
                 ClickableScript.CanInteract = true;
             }
+        }
+        else
+        {
+            ClickableScript.CanInteract = false;
         }
     }
 
@@ -288,10 +312,7 @@ public class MainGameScript : MonoBehaviour
     {
         foreach (int index in SelectedCardIndexes)
         {
-            if (index >= 0 && index < player.Cards.Count)
-            {
-                player.Cards.RemoveAt(index);
-            }
+            DeleteCard(index);
         }
         SelectedCardIndexes.Clear();
         
@@ -299,6 +320,59 @@ public class MainGameScript : MonoBehaviour
         SelectedCardIndexes.Clear();
         player.Oven.Add(CookieToBake);*/
     }
+    public void UseAbilityButtonPressed()
+    {
+        if (SelectedCardIndexes.Count == 1)
+        {
+            int index = SelectedCardIndexes[0];
+            Card SelectedCard = Players[0].Cards[index];
+
+            if (SelectedCard.rarity == "Wild")
+            {
+                UseAbility(SelectedCard);
+            }
+            else
+            {
+                DeleteCard(index);
+            }
+        }
+        UpdateHandUI(Players[0]);
+    }
+    void UseAbility(Card WildCard)
+    {
+        switch (WildCard.name)
+        {
+            case "Sprinkles":
+                Debug.Log("Sprinkles Ability");
+                //code ability here
+                break;
+
+            case "MilkDunk":
+                Debug.Log("MilkDunk Ability");
+                //code ability here
+                break;
+
+            case "CookieMonster":
+                Debug.Log("CookieMonster Ability");
+                //code ability here
+                break;
+
+            default:
+                Debug.Log($"{WildCard.name} -> ability not implemented yet");
+                break;
+        }
+        Players[0].Cards.Remove(WildCard);
+
+    }
+    void DeleteCard(int index)
+    {
+        if (index >= 0 && index < Players[0].Cards.Count)
+        {
+            Players[0].Cards.RemoveAt(index);
+        }
+
+    }
+
 
     //We have drawing card capabilities
     //Now we need to play card , bake
