@@ -174,7 +174,6 @@ public class MainGameScript : MonoBehaviour
     void Update()
     {
         Players[0].CanBake.Clear();
-
         if (Players[0].Cards.Count == 7)
         {
             ClickableScript.DrawCanInteract = false;
@@ -204,6 +203,7 @@ public class MainGameScript : MonoBehaviour
         }
         else if (SelectedCardIndexes.Count >= 2)
         {
+            ClickableScript.UseAbilityCanInteract = false;
             List<Card> IngredientsSelected = new List<Card>();
             foreach (int index in SelectedCardIndexes)
             {
@@ -220,6 +220,7 @@ public class MainGameScript : MonoBehaviour
         }
         else
         {
+            ClickableScript.UseAbilityCanInteract = true;
             ClickableScript.BakeCanInteract = false;
         }
 
@@ -292,7 +293,7 @@ public class MainGameScript : MonoBehaviour
     {
         Deck.Clear();
 
-        for (int i = 1; i <= 10; i++)
+        for (int i = 1; i <= 30; i++)
         {
             Deck.Add(GenCard());
         }
@@ -580,6 +581,11 @@ public class MainGameScript : MonoBehaviour
             player.Oven.Clear();
             Debug.Log($"Player {player.PlayerNo} got burnt");
         }
+        else if (player.MilkDunkActive == true)
+        {
+            player.MilkDunkActive = false;
+            Debug.Log($"Player {player.PlayerNo} was saved by Milk Dunk");
+        }
         else
         {
             Debug.Log($"Player {player.PlayerNo} got spared");
@@ -611,8 +617,16 @@ public class MainGameScript : MonoBehaviour
             OtherPlayerNo = 1;
         }
 
-        Players[OtherPlayerNo].Cards.RemoveAt(UnityEngine.Random.Range(0,Players[OtherPlayerNo].Cards.Count));
-        UpdateHandUI(Players[0]);
+        if (Players[OtherPlayerNo].MilkDunkActive == false)
+        {
+            Players[OtherPlayerNo].Cards.RemoveAt(UnityEngine.Random.Range(0, Players[OtherPlayerNo].Cards.Count));
+        }
+        else
+        {
+            Players[OtherPlayerNo].MilkDunkActive = false;
+            Debug.Log($"Player {Players[OtherPlayerNo].PlayerNo} was saved by milk dunk");
+        }
+            UpdateHandUI(Players[0]);
     }
 
     void Sprinkles(Player player)
