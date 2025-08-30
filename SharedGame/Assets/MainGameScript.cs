@@ -64,7 +64,7 @@ public class MainGameScript : MonoBehaviour
     private Card[] UncommonCards = { new Card("Jam", "Uncommon", 2), new Card("Honey", "Uncommon", 2), new Card("Chocolate", "Uncommon", 2), new Card("Cream", "Uncommon", 2) };
     private Card[] RareCards = { new Card("Caramel", "Rare", 4), new Card("PeanutButter", "Rare", 4), new Card("Marshmallow", "Rare", 4) };
     private Card[] LegendaryCards = { new Card("WhiteChocolate", "Legendary", 10), new Card("PistachioCream", "Legendary", 10), };
-    private Card[] WildCards = { new Card("CookieMonster", "Wild", 0) };
+    private Card[] WildCards = { new Card("Sprinkles", "Wild" , 0) , new Card("MilkDunk", "Wild" , 0), new Card("BurntEdge","Wild",0), new Card("Salt","Wild",0),new Card("CookieMonster", "Wild", 0) };
 
     private Cookie[] Cookies = {
             new Cookie("BalancedBiscuit", "Low",0),
