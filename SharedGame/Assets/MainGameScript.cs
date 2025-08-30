@@ -73,9 +73,19 @@ public class MainGameScript : MonoBehaviour
             new Cookie("PistachioDelight","High",0)
     };
 
-    [Header("UI References")]
+    
     public GameObject cardPrefab;
-    public GameObject cookiePrefab;
+
+    [Header("Cookie Prefabs")]
+
+    public GameObject BBPrefab;
+    public GameObject RBPrefab;
+    public GameObject PBPrefab;
+    public GameObject PDPrefab;
+
+    private Dictionary<string, GameObject> CookiePrefabMap;
+
+    [Header("UI References")]
     public Transform PlayerHandPanel;
     public Transform PlayerOvenPanel;
     public Button AbilityButton;
@@ -119,16 +129,32 @@ public class MainGameScript : MonoBehaviour
         for (int i = 0; i < player.Oven.Count; i++)
         {
             var cookie = player.Oven[i];
-            GameObject newCookie = Instantiate(cookiePrefab, PlayerOvenPanel);
-            newCookie.name = cookie.name;
+            if (CookiePrefabMap.TryGetValue(cookie.name, out GameObject prefab))
+            {
+                GameObject newcookie = Instantiate(prefab, PlayerOvenPanel);
+                newcookie.name = cookie.name;
+                UIOvenObjects.Add(newcookie);
+            }
+            else
+            {
+                Debug.Log($"No prefab found for cookie");
+            }
 
-            UIOvenObjects.Add(newCookie);
         }
     }
 
 
     void Start()
     {
+        CookiePrefabMap = new Dictionary<string, GameObject>()
+        {
+            { "BalancedBiscuit", BBPrefab },
+            { "RoyalBiscuit", RBPrefab },
+            { "PBJt", PBPrefab },
+            { "PistachioDelight", PDPrefab },
+            
+        };
+
         ClickableScript.CanInteract = false;
         BuildCookies();
         BuildDeck();
@@ -144,7 +170,7 @@ public class MainGameScript : MonoBehaviour
     {
         if (Players[0].Oven.Count != 0)
         {
-            foreach(var cookie in UI)
+            foreach(var cookie in UIOvenObjects)
             {
                 CookieToogleUI.toggle.interactable = false;
             }
