@@ -392,6 +392,7 @@ public class MainGameScript : MonoBehaviour
 
     public void BakeButtonPressed()
     {
+        GetComponent<AudioSource>().Play();
         Bake(Players[0]);
 
         UpdateHandUI(Players[0]);
@@ -461,6 +462,7 @@ public class MainGameScript : MonoBehaviour
     }
     public void UseAbilityButtonPressed()
     {
+        GetComponent<AudioSource>().Play();
         if (SelectedCardIndexes.Count == 1)
         {
             int index = SelectedCardIndexes[0];
