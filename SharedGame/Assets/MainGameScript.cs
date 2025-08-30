@@ -6,11 +6,13 @@ using TMPro;
 using System.Linq; 
 using static MainGameScript;
 using Unity.VisualScripting;
+using UnityEditor.Search;
 
 public class MainGameScript : MonoBehaviour
 {
     public static List<int> SelectedCardIndexes = new List<int>();
     public static List<int> SelectedCookiesIndexes = new List<int>();
+    public static Card SprinkleCardConv;
     public int round = 1;
 
     public class Player
@@ -426,17 +428,29 @@ public class MainGameScript : MonoBehaviour
 
     void TakeOutOven(Player player)
     {
-        foreach (int index in SelectedCookiesIndexes)
-        {
-            Cookie CookieInOven = player.Oven[index];
-            CookieInOven.RoundsBaked = round - CookieInOven.RoundsBaked;
-            CookieInOven.value = (int)(CookieInOven.value * (1 + (double)(CookieInOven.RoundsBaked / 100)));
-            player.Oven.RemoveAt(index);
-        }
-
         if (player.PlayerNo == 1)
         {
+            foreach (int index in SelectedCookiesIndexes)
+            {
+                Cookie CookieInOven = player.Oven[index];
+                CookieInOven.RoundsBaked = round - CookieInOven.RoundsBaked;
+                CookieInOven.value = (int)(CookieInOven.value * (1 + (double)(CookieInOven.RoundsBaked / 100)));
+                player.Oven.RemoveAt(index);
+            }
+
             UpdateOvenUI(player);
+        }
+        else
+        {
+            foreach(Cookie cookie in player.Oven)
+            {
+                if(round -  cookie.RoundsBaked > 3)
+                {
+                    cookie.value = (int)(cookie.value * (1 + (double)(cookie.RoundsBaked / 100)));
+                    player.Cards.Add(cookie);
+                    player.Oven.Remove(cookie);
+                }
+            }
         }
     }
     public void UseAbilityButtonPressed()
@@ -487,6 +501,8 @@ public class MainGameScript : MonoBehaviour
     void Sprinkles(Player player)
     {
         //User will click which one they want and then confirm then it will change to that
+        player.Cards.Add(SprinkleCardConv);
+        //Remove Sprinkles Card
     }
     void MilkDunk(Player player)
     {
@@ -494,6 +510,26 @@ public class MainGameScript : MonoBehaviour
     }
     void CookieMonster(Player player)
     {
+        if(player.PlayerNo == 1)
+        {
+           //Show user the oven
+           //Wait for user selection
+           //Then take unless MilkDunk is activated :)
+        }
+        else
+        {
+            if (Players[0].MilkDunkActive)
+            {
+                Debug.Log($"Player {Players[0].PlayerNo} has MilkDunk and protected from the Cookie Monster");
+                Players[0].MilkDunkActive = false;
+            }
+            else
+            {
+                player.Cards.Add(Players[0].Oven.First());
+                TakeOutOven(Players[0]);
+                
+            }
+        }
     }
     void DeleteCard(Player player, int index)
     {
