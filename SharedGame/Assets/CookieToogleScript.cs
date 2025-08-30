@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//using static CookieToggleScript;
+using static CookieToogleUI;
 
-public class CookieToggleScript : MonoBehaviour
+public class CookieToogleUI : MonoBehaviour
 {
     public static Toggle toggle;
     private Image image;
