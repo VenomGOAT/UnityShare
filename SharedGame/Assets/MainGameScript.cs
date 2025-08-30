@@ -14,6 +14,7 @@ public class MainGameScript : MonoBehaviour
     public static List<int> SelectedCookiesIndexes = new List<int>();
     public static Card SprinkleCardConv;
     public int round = 1;
+    public int CookieInOvenClicked = 0;
 
     public class Player
     {
@@ -72,11 +73,13 @@ public class MainGameScript : MonoBehaviour
 
     [Header("UI References")]
     public GameObject cardPrefab;
+    public GameObject cookiePrefab;
     public Transform PlayerHandPanel;
     public Transform PlayerOvenPanel;
     public Button AbilityButton;
 
     private List<GameObject> UICardObjects = new List<GameObject>();
+
 
     void UpdateHandUI(Player player)
     {
@@ -114,7 +117,7 @@ public class MainGameScript : MonoBehaviour
         for (int i = 0; i < player.Oven.Count; i++)
         {
             var cookie = player.Oven[i];
-            GameObject newCookie = Instantiate(cardPrefab, PlayerOvenPanel);
+            GameObject newCookie = Instantiate(cookiePrefab, PlayerOvenPanel);
             newCookie.name = cookie.name;
 
             UIOvenObjects.Add(newCookie);
@@ -138,8 +141,6 @@ public class MainGameScript : MonoBehaviour
     void Update()
     {
         Players[0].CanBake.Clear();
-        AbilityButton.interactable = (SelectedCardIndexes.Count == 1);
-
         if (SelectedCardIndexes.Count == 1)
         {
             int index = SelectedCardIndexes[0];
@@ -170,7 +171,7 @@ public class MainGameScript : MonoBehaviour
             {
                 Players[0].CanBake.Add(CookieToBake);
                 ClickableScript.CanInteract = true;
-                Debug.Log($"Can bake {Players[0].CanBake[0].name}");
+                //Debug.Log($"Can bake {Players[0].CanBake[0].name}");
             }
         }
         else
@@ -241,13 +242,11 @@ public class MainGameScript : MonoBehaviour
         }
     }
 
-
-
     void BuildDeck()
     {
         Deck.Clear();
 
-        for (int i = 1; i <= 20; i++)
+        for (int i = 1; i <= 50; i++)
         {
             Deck.Add(GenCard());
         }
@@ -384,6 +383,12 @@ public class MainGameScript : MonoBehaviour
         
     }
 
+    public void TakeOutButtonPressed()
+    {
+        TakeOutOven(Players[0]);
+        UpdateHandUI(Players[0]);
+        UpdateOvenUI(Players[0]);
+    }
 
     public void BakeButtonPressed()
     {
@@ -435,6 +440,7 @@ public class MainGameScript : MonoBehaviour
                 Cookie CookieInOven = player.Oven[index];
                 CookieInOven.RoundsBaked = round - CookieInOven.RoundsBaked;
                 CookieInOven.value = (int)(CookieInOven.value * (1 + (double)(CookieInOven.RoundsBaked / 100)));
+                player.Cards.Add(CookieInOven);
                 player.Oven.RemoveAt(index);
             }
 
