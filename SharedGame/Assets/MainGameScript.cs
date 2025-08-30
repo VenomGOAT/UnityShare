@@ -7,6 +7,8 @@ using System.Linq;
 using static MainGameScript;
 using Unity.VisualScripting;
 using UnityEditor.Search;
+using UnityEditor.ShaderKeywordFilter;
+using UnityEditor.Experimental.GraphView;
 
 public class MainGameScript : MonoBehaviour
 {
@@ -62,7 +64,7 @@ public class MainGameScript : MonoBehaviour
     private Card[] UncommonCards = { new Card("Jam", "Uncommon", 2), new Card("Honey", "Uncommon", 2), new Card("Chocolate", "Uncommon", 2), new Card("Cream", "Uncommon", 2) };
     private Card[] RareCards = { new Card("Caramel", "Rare", 4), new Card("PeanutButter", "Rare", 4), new Card("Marshmallow", "Rare", 4) };
     private Card[] LegendaryCards = { new Card("WhiteChocolate", "Legendary", 10), new Card("PistachioCream", "Legendary", 10), };
-    private Card[] WildCards = { new Card("Sprinkles", "Wild", 0), new Card("MilkDunk", "Wild", 0), new Card("Salt", "Wild", 0), new Card("BurntEdge", "Wild", 0), new Card("CookieMonster", "Wild", 0) };
+    private Card[] WildCards = { new Card("CookieMonster", "Wild", 0) };
 
     private Cookie[] Cookies = {
             new Cookie("BalancedBiscuit", "Low",0),
@@ -149,7 +151,8 @@ public class MainGameScript : MonoBehaviour
             {
                 if (Players[0].Cards[index].rarity == "Wild")
                 {
-                    Debug.Log($"Wild Card Selected");
+                    //Debug.Log($"Wild Card Selected");
+
                 }
             }
             else
@@ -450,7 +453,7 @@ public class MainGameScript : MonoBehaviour
         {
             foreach(Cookie cookie in player.Oven)
             {
-                if(round -  cookie.RoundsBaked > 3)
+                if(round -  cookie.RoundsBaked > 50)
                 {
                     cookie.value = (int)(cookie.value * (1 + (double)(cookie.RoundsBaked / 100)));
                     player.Cards.Add(cookie);
@@ -516,26 +519,55 @@ public class MainGameScript : MonoBehaviour
     }
     void CookieMonster(Player player)
     {
-        if(player.PlayerNo == 1)
+        int OtherPlayerNo = 0;
+
+        for (int i = 0; i < player.Cards.Count; i++)
         {
-           //Show user the oven
-           //Wait for user selection
-           //Then take unless MilkDunk is activated :)
+            if (player.Cards[i].name == "CookieMonster")
+            {
+                player.Cards.RemoveAt(i);
+            }
+        }
+
+        if (player.PlayerNo == 1)
+        {
+            OtherPlayerNo = 1;
+        }
+
+        
+
+
+        if (Players[OtherPlayerNo].Oven.Count == 0)
+        {
+            Debug.Log($"Oooooo, unlucky. No cookie to steal");
+        }
+        else if (Players[OtherPlayerNo].MilkDunkActive)
+        {
+            Debug.Log($"Player {Players[OtherPlayerNo].PlayerNo} has MilkDunk and protected from the Cookie Monster");
+            Players[OtherPlayerNo].MilkDunkActive = false;
         }
         else
         {
-            if (Players[0].MilkDunkActive)
-            {
-                Debug.Log($"Player {Players[0].PlayerNo} has MilkDunk and protected from the Cookie Monster");
-                Players[0].MilkDunkActive = false;
-            }
-            else
-            {
-                player.Cards.Add(Players[0].Oven.First());
-                TakeOutOven(Players[0]);
-                
-            }
+
+            int CookieIndexGen = Random.Range(0, Players[OtherPlayerNo].Oven.Count);
+
+            Cookie CookieTaken = Players[OtherPlayerNo].Oven[CookieIndexGen];
+
+            Debug.Log($"{CookieTaken.name} has been stolen");
+
+            CookieTaken.RoundsBaked = round - CookieTaken.RoundsBaked;
+            CookieTaken.value = (int)(CookieTaken.value * (1 + (double)(CookieTaken.RoundsBaked / 100)));
+
+            player.Cards.Add(CookieTaken);
+            Players[OtherPlayerNo].Oven.RemoveAt(CookieIndexGen);
+
+            Debug.Log($"Player {Players[OtherPlayerNo].PlayerNo}'s {CookieTaken.name}({CookieTaken.value}) has been taken");
         }
+
+        
+        UpdateOvenUI(Players[0]);
+        UpdateHandUI(Players[0]);
+
     }
     void DeleteCard(Player player, int index)
     {
