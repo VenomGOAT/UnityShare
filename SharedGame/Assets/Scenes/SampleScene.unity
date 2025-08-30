@@ -6397,7 +6397,10 @@ MonoBehaviour:
   round: 1
   CookieInOvenClicked: 0
   cardPrefab: {fileID: 1519975446267921105, guid: 135067748e26ee44e941da7366f5210f, type: 3}
-  cookiePrefab: {fileID: 1519975446267921105, guid: 5084e68e414df974f985dcde519a25eb, type: 3}
+  BBPrefab: {fileID: 1519975446267921105, guid: 0122e741fd860174d8394fe7f42a8619, type: 3}
+  RBPrefab: {fileID: 1519975446267921105, guid: 2aa3d08f249d8b74ebaf0b7ea0cccd82, type: 3}
+  PBPrefab: {fileID: 1519975446267921105, guid: eb377293f2568604093ce015207dae10, type: 3}
+  PDPrefab: {fileID: 1519975446267921105, guid: 2b9e31fe26690004f94582410e2e5c46, type: 3}
   PlayerHandPanel: {fileID: 11836892}
   PlayerOvenPanel: {fileID: 1418321700}
   AbilityButton: {fileID: 1180941998}

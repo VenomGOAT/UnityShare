@@ -149,7 +149,6 @@ public class MainGameScript : MonoBehaviour
 
     void Start()
     {
-<<<<<<< HEAD
         CookiePrefabMap = new Dictionary<string, GameObject>()
         {
             { "BalancedBiscuit", BBPrefab },
@@ -159,9 +158,6 @@ public class MainGameScript : MonoBehaviour
             
         };
 
-        ClickableScript.CanInteract = false;
-=======
->>>>>>> 49c031e97cef2a4b1db69dab9dff99434d25d0e7
         BuildCookies();
         BuildDeck();
         Players.Add(new Player(1));
@@ -174,32 +170,16 @@ public class MainGameScript : MonoBehaviour
 
     void Update()
     {
+        Players[0].CanBake.Clear();
+
         if (Players[0].Cards.Count == 7)
         {
-<<<<<<< HEAD
-            foreach(var cookie in UIOvenObjects)
-            {
-                CookieToogleUI.toggle.interactable = false;
-            }
-        }
-
-        Players[0].CanBake.Clear();
-        if (SelectedCookiesIndexes.Count > 0)
-        {
-            foreach (var card in UICardObjects)
-            {
-                ToggleScript.toggle.interactable = false;
-            }
-=======
             ClickableScript.DrawCanInteract = false;
->>>>>>> 49c031e97cef2a4b1db69dab9dff99434d25d0e7
         }
         else
         {
             ClickableScript.DrawCanInteract = true;
         }
-
-            Players[0].CanBake.Clear();
         
         if (SelectedCardIndexes.Count == 1)
         {
