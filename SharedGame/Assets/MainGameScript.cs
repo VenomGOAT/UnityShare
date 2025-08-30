@@ -10,6 +10,7 @@ using UnityEditor.Search;
 using UnityEditor.ShaderKeywordFilter;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.SocialPlatforms.Impl;
+using System;
 
 public class MainGameScript : MonoBehaviour
 {
@@ -306,28 +307,28 @@ public class MainGameScript : MonoBehaviour
      */
     Card GenCard()
     {
-        int rand = Random.Range(1, 101);
+        int rand = UnityEngine.Random.Range(1, 101);
         Card CardGenerated;
         if (rand <= 40)
         {
-            CardGenerated = CommonCards[Random.Range(0, CommonCards.Length)];
+            CardGenerated = CommonCards[UnityEngine.Random.Range(0, CommonCards.Length)];
         }
         else if (rand <=70)
         {
-            CardGenerated = UncommonCards[Random.Range(0, UncommonCards.Length)];
+            CardGenerated = UncommonCards[UnityEngine.Random.Range(0, UncommonCards.Length)];
         }
         else if (rand <= 85)
         {
-            CardGenerated = RareCards[Random.Range(0, RareCards.Length)];
+            CardGenerated = RareCards[UnityEngine.Random.Range(0, RareCards.Length)];
         }
         else if (rand <= 95)
         {
-            CardGenerated = LegendaryCards[Random.Range(0, LegendaryCards.Length)];
+            CardGenerated = LegendaryCards[UnityEngine.Random.Range(0, LegendaryCards.Length)];
 
         }
         else
         {
-            CardGenerated = WildCards[Random.Range(0, WildCards.Length)];
+            CardGenerated = WildCards[UnityEngine.Random.Range(0, WildCards.Length)];
         }
 
         return CardGenerated;
@@ -340,7 +341,7 @@ public class MainGameScript : MonoBehaviour
         for (int i = 0; i < Deck.Count; i++)
         {
             Card temp = Deck[i];
-            int rand = Random.Range(i, Deck.Count);
+            int rand = UnityEngine.Random.Range(i, Deck.Count);
             Deck[i] = Deck[rand];
             Deck[rand] = temp;
         }
@@ -417,9 +418,17 @@ public class MainGameScript : MonoBehaviour
             Card card = Deck[0];
             Deck.RemoveAt(0);
 
-            player.Cards.Add(card);
+            if(card.name == "BurntEdge")
+            {
+                BurntEdge(player);
+            }
+            else
+            {
+                player.Cards.Add(card);
+            }
             Debug.Log("Player " + player.PlayerNo + " drew: " + card.name);
         }
+
         else
         {
             EndRound();
@@ -555,6 +564,36 @@ public class MainGameScript : MonoBehaviour
 
     }
 
+    void BurntEdge(Player player)
+    {
+        for (int i = 0; i < player.Cards.Count; i++)
+        {
+            if (player.Cards[i].name == "BurntEdge")
+            {
+                player.Cards.RemoveAt(i);
+            }
+        }
+
+
+        if (player.Oven.Count != 0)
+        {
+            player.Oven.Clear();
+            Debug.Log($"Player {player.PlayerNo} got burnt");
+        }
+        else
+        {
+            Debug.Log($"Player {player.PlayerNo} got spared");
+        }
+
+        if(player.PlayerNo == 1)
+        {
+            UpdateOvenUI(player);
+            UpdateHandUI(player);
+        }
+
+
+    }
+
     void Salt(Player player)
     {
         int OtherPlayerNo = 0;
@@ -572,15 +611,21 @@ public class MainGameScript : MonoBehaviour
             OtherPlayerNo = 1;
         }
 
-        Players[OtherPlayerNo].Cards.RemoveAt(Random.Range(0,Players[OtherPlayerNo].Cards.Count));
+        Players[OtherPlayerNo].Cards.RemoveAt(UnityEngine.Random.Range(0,Players[OtherPlayerNo].Cards.Count));
         UpdateHandUI(Players[0]);
     }
 
     void Sprinkles(Player player)
     {
-        //User will click which one they want and then confirm then it will change to that
-        player.Cards.Add(SprinkleCardConv);
-        //Remove Sprinkles Card
+        for (int i = 0; i < player.Cards.Count; i++)
+        {
+            if (player.Cards[i].name == "Sprinkles")
+            {
+                player.Cards.RemoveAt(i);
+            }
+        }
+
+        player.Cards.Add(Cookies[UnityEngine.Random.Range(0,Cookies.Length)]);
     }
     void MilkDunk(Player player)
     {
@@ -619,7 +664,7 @@ public class MainGameScript : MonoBehaviour
         else
         {
 
-            int CookieIndexGen = Random.Range(0, Players[OtherPlayerNo].Oven.Count);
+            int CookieIndexGen = UnityEngine.Random.Range(0, Players[OtherPlayerNo].Oven.Count);
 
             Cookie CookieTaken = Players[OtherPlayerNo].Oven[CookieIndexGen];
 
