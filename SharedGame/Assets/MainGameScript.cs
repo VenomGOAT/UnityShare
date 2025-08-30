@@ -18,6 +18,9 @@ public class MainGameScript : MonoBehaviour
     public int round = 1;
     public int CookieInOvenClicked = 0;
 
+    public static CookieToggleScript CookieToggleScript;
+    public static ToggleScript ToggleScript;
+
     public class Player
     {
         public int PlayerNo;
@@ -146,6 +149,7 @@ public class MainGameScript : MonoBehaviour
 
     void Start()
     {
+<<<<<<< HEAD
         CookiePrefabMap = new Dictionary<string, GameObject>()
         {
             { "BalancedBiscuit", BBPrefab },
@@ -156,6 +160,8 @@ public class MainGameScript : MonoBehaviour
         };
 
         ClickableScript.CanInteract = false;
+=======
+>>>>>>> 49c031e97cef2a4b1db69dab9dff99434d25d0e7
         BuildCookies();
         BuildDeck();
         Players.Add(new Player(1));
@@ -168,8 +174,9 @@ public class MainGameScript : MonoBehaviour
 
     void Update()
     {
-        if (Players[0].Oven.Count != 0)
+        if (Players[0].Cards.Count == 7)
         {
+<<<<<<< HEAD
             foreach(var cookie in UIOvenObjects)
             {
                 CookieToogleUI.toggle.interactable = false;
@@ -183,15 +190,17 @@ public class MainGameScript : MonoBehaviour
             {
                 ToggleScript.toggle.interactable = false;
             }
+=======
+            ClickableScript.DrawCanInteract = false;
+>>>>>>> 49c031e97cef2a4b1db69dab9dff99434d25d0e7
         }
         else
         {
-            foreach (var card in UICardObjects)
-            {
-                ToggleScript.toggle.interactable = true;
-            }
+            ClickableScript.DrawCanInteract = true;
         }
 
+            Players[0].CanBake.Clear();
+        
         if (SelectedCardIndexes.Count == 1)
         {
             int index = SelectedCardIndexes[0];
@@ -222,21 +231,13 @@ public class MainGameScript : MonoBehaviour
             if (IsRecipe)
             {
                 Players[0].CanBake.Add(CookieToBake);
-                ClickableScript.CanInteract = true;
+                ClickableScript.BakeCanInteract = true;
                 //Debug.Log($"Can bake {Players[0].CanBake[0].name}");
             }
         }
         else
         {
-            if (Players[0].Oven.Count != 0)
-            {
-                foreach (var cookie in UIOvenObjects)
-                {
-                    CookieToogleUI.toggle.interactable = true;
-                }
-            }
-
-            ClickableScript.CanInteract = false;
+            ClickableScript.BakeCanInteract = false;
         }
 
         
