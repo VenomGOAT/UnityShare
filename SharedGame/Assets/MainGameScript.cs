@@ -18,6 +18,9 @@ public class MainGameScript : MonoBehaviour
     public int round = 1;
     public int CookieInOvenClicked = 0;
 
+    public static CookieToggleScript CookieToggleScript;
+    public static ToggleScript ToggleScript;
+
     public class Player
     {
         public int PlayerNo;
@@ -142,30 +145,9 @@ public class MainGameScript : MonoBehaviour
 
     void Update()
     {
-        if (Players[0].Oven.Count != 0)
-        {
-            foreach(var cookie in UI)
-            {
-                CookieToogleUI.toggle.interactable = false;
-            }
-        }
-
+        
         Players[0].CanBake.Clear();
-        if (SelectedCookiesIndexes.Count > 0)
-        {
-            foreach (var card in UICardObjects)
-            {
-                ToggleScript.toggle.interactable = false;
-            }
-        }
-        else
-        {
-            foreach (var card in UICardObjects)
-            {
-                ToggleScript.toggle.interactable = true;
-            }
-        }
-
+        
         if (SelectedCardIndexes.Count == 1)
         {
             int index = SelectedCardIndexes[0];
@@ -202,14 +184,6 @@ public class MainGameScript : MonoBehaviour
         }
         else
         {
-            if (Players[0].Oven.Count != 0)
-            {
-                foreach (var cookie in UIOvenObjects)
-                {
-                    CookieToogleUI.toggle.interactable = true;
-                }
-            }
-
             ClickableScript.CanInteract = false;
         }
 
