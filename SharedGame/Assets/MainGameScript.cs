@@ -132,7 +132,6 @@ public class MainGameScript : MonoBehaviour
 
     void Start()
     {
-        ClickableScript.CanInteract = false;
         BuildCookies();
         BuildDeck();
         Players.Add(new Player(1));
@@ -145,8 +144,16 @@ public class MainGameScript : MonoBehaviour
 
     void Update()
     {
-        
-        Players[0].CanBake.Clear();
+        if (Players[0].Cards.Count == 7)
+        {
+            ClickableScript.DrawCanInteract = false;
+        }
+        else
+        {
+            ClickableScript.DrawCanInteract = true;
+        }
+
+            Players[0].CanBake.Clear();
         
         if (SelectedCardIndexes.Count == 1)
         {
@@ -178,13 +185,13 @@ public class MainGameScript : MonoBehaviour
             if (IsRecipe)
             {
                 Players[0].CanBake.Add(CookieToBake);
-                ClickableScript.CanInteract = true;
+                ClickableScript.BakeCanInteract = true;
                 //Debug.Log($"Can bake {Players[0].CanBake[0].name}");
             }
         }
         else
         {
-            ClickableScript.CanInteract = false;
+            ClickableScript.BakeCanInteract = false;
         }
 
         

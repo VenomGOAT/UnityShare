@@ -7,24 +7,37 @@ using static ClickableScript;
 
 public class ClickableScript : MonoBehaviour
 {
-    public Button button;
-    public static bool CanInteract;
+    public Button BakeButton;
+    public static bool BakeCanInteract;
 
-    
+    public Button DrawButton;
+    public static bool DrawCanInteract;
+
+
     void Start()
     {
-        button.interactable = false;
+        BakeButton.interactable = false;
+        DrawButton.interactable = true;
     }
 
     void Update()
     {
-        if (CanInteract)
+        if (BakeCanInteract)
         {
-            button.interactable = true;
+            BakeButton.interactable = true;
         }
         else
         {
-            button.interactable = false;
+            BakeButton.interactable = false;
+        }
+
+        if (DrawCanInteract)
+        {
+            DrawButton.interactable = true;
+        }
+        else
+        {
+            DrawButton.interactable = false;
         }
     }
 }
