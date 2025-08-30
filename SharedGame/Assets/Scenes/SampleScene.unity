@@ -1302,7 +1302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OvenImage: {fileID: 108378452}
-  BigSize: {x: 16, y: 10, z: 1}
+  BigSize: {x: 10, y: 10, z: 1}
   NewPosition: {x: 0, y: 3, z: 0}
 --- !u!1 &855129304
 GameObject:
