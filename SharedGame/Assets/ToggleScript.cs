@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static ToggleScript;
 
 public class ToggleScript : MonoBehaviour
 {
-    private Toggle toggle;
+    public static Toggle toggle;
     private Image image;
 
     public int CardIndex;

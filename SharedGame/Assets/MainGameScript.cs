@@ -142,7 +142,30 @@ public class MainGameScript : MonoBehaviour
 
     void Update()
     {
+        if (Players[0].Oven.Count != 0)
+        {
+            foreach(var cookie in UI)
+            {
+                CookieToogleUI.toggle.interactable = false;
+            }
+        }
+
         Players[0].CanBake.Clear();
+        if (SelectedCookiesIndexes.Count > 0)
+        {
+            foreach (var card in UICardObjects)
+            {
+                ToggleScript.toggle.interactable = false;
+            }
+        }
+        else
+        {
+            foreach (var card in UICardObjects)
+            {
+                ToggleScript.toggle.interactable = true;
+            }
+        }
+
         if (SelectedCardIndexes.Count == 1)
         {
             int index = SelectedCardIndexes[0];
@@ -157,14 +180,14 @@ public class MainGameScript : MonoBehaviour
             }
             else
             {
+                
                 SelectedCardIndexes.Clear();
             }
         }
-
         else if (SelectedCardIndexes.Count >= 2)
         {
             List<Card> IngredientsSelected = new List<Card>();
-            foreach(int index in SelectedCardIndexes)
+            foreach (int index in SelectedCardIndexes)
             {
                 IngredientsSelected.Add(Players[0].Cards[index]);
             }
@@ -179,6 +202,14 @@ public class MainGameScript : MonoBehaviour
         }
         else
         {
+            if (Players[0].Oven.Count != 0)
+            {
+                foreach (var cookie in UIOvenObjects)
+                {
+                    CookieToogleUI.toggle.interactable = true;
+                }
+            }
+
             ClickableScript.CanInteract = false;
         }
 
@@ -501,7 +532,10 @@ public class MainGameScript : MonoBehaviour
                 Debug.Log("CookieMonster Ability");
                 CookieMonster(player);
                 break;
-
+            case "Salt":
+                Debug.Log("Salt ability");
+                Salt(player);
+                break;
             default:
                 Debug.Log($"{WildCard.name} -> ability not implemented yet");
                 break;
@@ -509,6 +543,28 @@ public class MainGameScript : MonoBehaviour
         player.Cards.Remove(WildCard);
 
     }
+
+    void Salt(Player player)
+    {
+        int OtherPlayerNo = 0;
+
+        for (int i = 0; i < player.Cards.Count; i++)
+        {
+            if (player.Cards[i].name == "Salt")
+            {
+                player.Cards.RemoveAt(i);
+            }
+        }
+
+        if (player.PlayerNo == 1)
+        {
+            OtherPlayerNo = 1;
+        }
+
+        Players[OtherPlayerNo].Cards.RemoveAt(Random.Range(0,Players[OtherPlayerNo].Cards.Count));
+        UpdateHandUI(Players[0]);
+    }
+
     void Sprinkles(Player player)
     {
         //User will click which one they want and then confirm then it will change to that
@@ -519,6 +575,7 @@ public class MainGameScript : MonoBehaviour
     {
         player.MilkDunkActive = true;
     }
+
     void CookieMonster(Player player)
     {
         int OtherPlayerNo = 0;
@@ -571,6 +628,7 @@ public class MainGameScript : MonoBehaviour
         UpdateHandUI(Players[0]);
 
     }
+
     void DeleteCard(Player player, int index)
     {
         if (index >= 0 && index < player.Cards.Count)
