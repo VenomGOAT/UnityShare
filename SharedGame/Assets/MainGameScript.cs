@@ -71,6 +71,7 @@ public class MainGameScript : MonoBehaviour
     [Header("UI References")]
     public GameObject cardPrefab;
     public Transform PlayerHandPanel;
+    public Transform PlayerOvenPanel;
     public Button AbilityButton;
 
     private List<GameObject> UICardObjects = new List<GameObject>();
@@ -95,6 +96,26 @@ public class MainGameScript : MonoBehaviour
             toggleScript.CardIndex = i;
 
             UICardObjects.Add(newCard);
+        }
+    }
+
+    private List<GameObject> UIOvenObjects = new List<GameObject>();
+
+    void UpdateOvenUI(Player player)
+    {
+        foreach (var obj in UIOvenObjects)
+        {
+            Destroy(obj);
+        }
+        UIOvenObjects.Clear();
+
+        for (int i = 0; i < player.Oven.Count; i++)
+        {
+            var cookie = player.Oven[i];
+            GameObject newCookie = Instantiate(cardPrefab, PlayerOvenPanel);
+            newCookie.name = cookie.name;
+
+            UIOvenObjects.Add(newCookie);
         }
     }
 
@@ -375,7 +396,7 @@ public class MainGameScript : MonoBehaviour
     {
 
         player.Oven.Add(player.CanBake[0]);
-        
+
 
         if (player.PlayerNo == 1)
         {
@@ -387,24 +408,35 @@ public class MainGameScript : MonoBehaviour
         }
         else
         {
-            foreach(Card Ingredient in player.CanBake[0].Ingredients)
+            foreach (Card Ingredient in player.CanBake[0].Ingredients)
             {
                 player.Cards.Remove(Ingredient);
             }
         }
+
         player.Oven.Last().RoundsBaked = round;
         player.CanBake.Clear();
         Debug.Log($"{player.Oven.Last()} is now being baked in the oven for player {player.PlayerNo}");
+
+        if (player.PlayerNo == 1)
+        {
+            UpdateOvenUI(player);
+        }
     }
 
     void TakeOutOven(Player player)
     {
-        foreach(int index in SelectedCookiesIndexes)
+        foreach (int index in SelectedCookiesIndexes)
         {
             Cookie CookieInOven = player.Oven[index];
             CookieInOven.RoundsBaked = round - CookieInOven.RoundsBaked;
-            CookieInOven.value =(int)(CookieInOven.value*(1 + (double)(CookieInOven.RoundsBaked / 100)));
+            CookieInOven.value = (int)(CookieInOven.value * (1 + (double)(CookieInOven.RoundsBaked / 100)));
             player.Oven.RemoveAt(index);
+        }
+
+        if (player.PlayerNo == 1)
+        {
+            UpdateOvenUI(player);
         }
     }
     public void UseAbilityButtonPressed()
