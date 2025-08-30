@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 using UnityEditor.Search;
 using UnityEditor.ShaderKeywordFilter;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class MainGameScript : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class MainGameScript : MonoBehaviour
 
     public static CookieToggleScript CookieToggleScript;
     public static ToggleScript ToggleScript;
-
+    public GameObject EndGamePanel;
     public class Player
     {
         public int PlayerNo;
@@ -149,6 +150,7 @@ public class MainGameScript : MonoBehaviour
 
     void Start()
     {
+        EndGamePanel.SetActive(false);
         CookiePrefabMap = new Dictionary<string, GameObject>()
         {
             { "BalancedBiscuit", BBPrefab },
@@ -220,6 +222,8 @@ public class MainGameScript : MonoBehaviour
             ClickableScript.BakeCanInteract = false;
         }
 
+
+        
         
     }
 
@@ -287,7 +291,7 @@ public class MainGameScript : MonoBehaviour
     {
         Deck.Clear();
 
-        for (int i = 1; i <= 50; i++)
+        for (int i = 1; i <= 10; i++)
         {
             Deck.Add(GenCard());
         }
@@ -667,26 +671,19 @@ public class MainGameScript : MonoBehaviour
             else if (score == BestScore)
             {
                 HighestPlayer = null;
-                //tie situation - currently set as nobody wins but should be changed
             }
         }
 
-        if (HighestPlayer != null)
-        {
-            Debug.Log("Player " + HighestPlayer.PlayerNo + " Wins the game with score " + BestScore);
-        }
-        else
-        {
-            Debug.Log("It is the tie. Both players have gotten the same score");
-        }
+        Debug.Log("Game Over");
+        EndGamePanel.SetActive(true);
 
+    }
 
-        int EvaluateCards(List<Card> Cards)
-        {
-            int score = 0;
-            foreach (var card in Cards) score += card.value;
-            //calculates basic value    
-            return score;
-        }
+    int EvaluateCards(List<Card> Cards)
+    {
+        int score = 0;
+        foreach (var card in Cards) score += card.value;
+        //calculates basic value    
+        return score;
     }
 }
