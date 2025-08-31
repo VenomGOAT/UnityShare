@@ -93,6 +93,7 @@ public class MainGameScript : MonoBehaviour
     [Header("UI References")]
     public Transform PlayerHandPanel;
     public Transform PlayerOvenPanel;
+    public Image EndGameScreen;
     public Button AbilityButton;
 
     private List<GameObject> UICardObjects = new List<GameObject>();
@@ -151,7 +152,7 @@ public class MainGameScript : MonoBehaviour
 
     void Start()
     {
-        EndGamePanel.SetActive(false);
+        EndGameScreen.transform.parent.gameObject.SetActive(false);
         CookiePrefabMap = new Dictionary<string, GameObject>()
         {
             { "BalancedBiscuit", BBPrefab },
@@ -717,6 +718,8 @@ public class MainGameScript : MonoBehaviour
         Player HighestPlayer = null;
         int BestScore = -99;
 
+        int PlayerScore = EvaluateCards(Players[0].Cards);
+
         foreach (var p in Players)
         {
             int score = EvaluateCards(p.Cards);
@@ -734,8 +737,23 @@ public class MainGameScript : MonoBehaviour
         }
 
         Debug.Log("Game Over");
-        EndGamePanel.SetActive(true);
+        
+        EndGameScreen.transform.parent.gameObject.SetActive(true);
 
+        TextMeshProUGUI resultText = EndGameScreen.GetComponentInChildren<TextMeshProUGUI>();
+
+        if (HighestPlayer == null)
+        {
+            resultText.text = $"It's a Draw! Your Score: {PlayerScore}";
+        }
+        else if (HighestPlayer.PlayerNo == 1)
+        {
+            resultText.text = $"You Won! Score {PlayerScore}";
+        }
+        else
+        {
+            resultText.text = $"You Lost! Score: {PlayerScore}";
+        }
     }
 
     int EvaluateCards(List<Card> Cards)
