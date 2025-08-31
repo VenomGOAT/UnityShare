@@ -77,8 +77,27 @@ public class MainGameScript : MonoBehaviour
             new Cookie("PistachioDelight","High",0)
     };
 
-    
-    public GameObject cardPrefab;
+    [Header("Ingredient Prefabs")]
+
+
+    public GameObject FLPrefab;
+    public GameObject SUPrefab;
+    public GameObject BUPrefab;
+    public GameObject JAPrefab;
+    public GameObject HOPrefab;
+    public GameObject CHPrefab;
+    public GameObject CRPrefab;
+    public GameObject CAPrefab;
+    public GameObject PNPrefab;
+    public GameObject MAPrefab;
+    public GameObject WCPrefab;
+    public GameObject PCPrefab;
+    public GameObject SPPrefab;
+    public GameObject MDPrefab;
+    public GameObject BEPrefab;
+    public GameObject SAPrefab;
+    public GameObject CMPrefab;
+
 
     [Header("Cookie Prefabs")]
 
@@ -88,6 +107,7 @@ public class MainGameScript : MonoBehaviour
     public GameObject PDPrefab;
 
     private Dictionary<string, GameObject> CookiePrefabMap;
+    private Dictionary<string, GameObject> IngredientPrefabMap;
 
     [Header("UI References")]
     public Transform PlayerHandPanel;
@@ -111,7 +131,16 @@ public class MainGameScript : MonoBehaviour
         for (int i = 0; i < player.Cards.Count; i++)
         {
             var card = player.Cards[i];
-            GameObject newCard = Instantiate(cardPrefab, PlayerHandPanel);
+            GameObject newCard = null;
+            if (IngredientPrefabMap.TryGetValue(card.name, out GameObject prefab))
+            {
+                newCard = Instantiate(prefab, PlayerHandPanel);
+            }
+            else
+            {
+                Debug.Log("no prefab found");
+            }
+            
             newCard.name = card.name;
 
             ToggleScript toggleScript = newCard.GetComponent<ToggleScript>();
@@ -159,6 +188,28 @@ public class MainGameScript : MonoBehaviour
             { "PBJt", PBPrefab },
             { "PistachioDelight", PDPrefab },
             
+        };
+
+        IngredientPrefabMap = new Dictionary<string, GameObject>()
+        {
+            { "Flour", FLPrefab },
+            { "Sugar", SUPrefab },
+            { "Butter", BUPrefab },
+            { "Jam", JAPrefab },
+            { "Honey", HOPrefab },
+            { "Chocolate", CHPrefab },
+            { "Cream", CRPrefab },
+            { "Caramel", CAPrefab },
+            { "PeanutButter", PNPrefab },
+            { "Marshmallow", MAPrefab },
+            { "WhiteChocolate", WCPrefab },
+            { "PistachioCream", PCPrefab },
+            { "Sprinkles", SPPrefab },
+            { "MilkDunk", MDPrefab },
+            { "BurntEdge", BEPrefab },
+            { "Salt", SAPrefab },
+            { "CookieMonster", CMPrefab },
+
         };
 
         BuildCookies();
