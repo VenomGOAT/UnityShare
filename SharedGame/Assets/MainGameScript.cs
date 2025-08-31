@@ -22,7 +22,6 @@ public class MainGameScript : MonoBehaviour
 
     public static CookieToggleScript CookieToggleScript;
     public static ToggleScript ToggleScript;
-    public GameObject EndGamePanel;
     public class Player
     {
         public int PlayerNo;
@@ -744,15 +743,15 @@ public class MainGameScript : MonoBehaviour
 
         if (HighestPlayer == null)
         {
-            resultText.text = $"It's a Draw! Your Score: {PlayerScore}";
+            resultText.text = $"It's a Draw \n Your Score: {PlayerScore}";
         }
         else if (HighestPlayer.PlayerNo == 1)
         {
-            resultText.text = $"You Won! Score {PlayerScore}";
+            resultText.text = $"You Won \n Score {PlayerScore}";
         }
         else
         {
-            resultText.text = $"You Lost! Score: {PlayerScore}";
+            resultText.text = $"You Lost \n Score: {PlayerScore}";
         }
     }
 
