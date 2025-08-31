@@ -1797,7 +1797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BakeButton: {fileID: 297801022}
   DrawButton: {fileID: 816056934}
-  UseAbilityButton: {fileID: 0}
+  UseAbilityButton: {fileID: 1180941998}
 --- !u!1001 &321024882
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4299,7 +4299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BakeButton: {fileID: 297801022}
   DrawButton: {fileID: 816056934}
-  UseAbilityButton: {fileID: 0}
+  UseAbilityButton: {fileID: 1180941998}
 --- !u!1 &830356760
 GameObject:
   m_ObjectHideFlags: 0
