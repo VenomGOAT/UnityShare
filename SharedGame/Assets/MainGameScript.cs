@@ -19,6 +19,8 @@ public class MainGameScript : MonoBehaviour
     public static Card SprinkleCardConv;
     public int round = 1;
     public int CookieInOvenClicked = 0;
+    public int Score = 0;
+    public TextMeshProUGUI scoreText;   
 
     public static CookieToggleScript CookieToggleScript;
     public static ToggleScript ToggleScript;
@@ -34,6 +36,10 @@ public class MainGameScript : MonoBehaviour
             this.PlayerNo = PlayerNo;
         }
 
+    }
+    void UpdateScoreText()
+    {
+        scoreText.text = "Score: " + Score.ToString();
     }
 
     public class Card
@@ -224,6 +230,7 @@ public class MainGameScript : MonoBehaviour
 
     void Update()
     {
+        UpdateScoreText();
         Players[0].CanBake.Clear();
         if (Players[0].Cards.Count == 7)
         {
@@ -477,6 +484,7 @@ public class MainGameScript : MonoBehaviour
             else
             {
                 player.Cards.Add(card);
+                Score += card.value;
             }
             Debug.Log("Player " + player.PlayerNo + " drew: " + card.name);
         }
@@ -524,6 +532,7 @@ public class MainGameScript : MonoBehaviour
         {
             foreach (Card Ingredient in player.CanBake[0].Ingredients)
             {
+                Score -= Ingredient.value;
                 player.Cards.Remove(Ingredient);
             }
         }
@@ -549,6 +558,7 @@ public class MainGameScript : MonoBehaviour
                 CookieInOven.value = (int)(CookieInOven.value * (1 + (double)(CookieInOven.RoundsBaked / 100)));
                 player.Cards.Add(CookieInOven);
                 player.Oven.RemoveAt(index);
+                Score += CookieInOven.value;
             }
 
             UpdateOvenUI(player);
@@ -670,7 +680,12 @@ public class MainGameScript : MonoBehaviour
 
         if (Players[OtherPlayerNo].MilkDunkActive == false)
         {
-            Players[OtherPlayerNo].Cards.RemoveAt(UnityEngine.Random.Range(0, Players[OtherPlayerNo].Cards.Count));
+            int Index = UnityEngine.Random.Range(0, Players[OtherPlayerNo].Cards.Count);
+            if(OtherPlayerNo == 1)
+            {
+                Score -= Players[0].Cards[Index].value;
+            }
+            Players[OtherPlayerNo].Cards.RemoveAt(Index);
         }
         else
         {
@@ -689,8 +704,9 @@ public class MainGameScript : MonoBehaviour
                 player.Cards.RemoveAt(i);
             }
         }
-
-        player.Cards.Add(Cookies[UnityEngine.Random.Range(0,Cookies.Length)]);
+        Cookie CookieGen = Cookies[UnityEngine.Random.Range(0, Cookies.Length)];
+        Score += CookieGen.value;
+        player.Cards.Add(CookieGen);
     }
     void MilkDunk(Player player)
     {
@@ -738,6 +754,7 @@ public class MainGameScript : MonoBehaviour
             CookieTaken.RoundsBaked = round - CookieTaken.RoundsBaked;
             CookieTaken.value = (int)(CookieTaken.value * (1 + (double)(CookieTaken.RoundsBaked / 100)));
 
+            Score += CookieTaken.value;
             player.Cards.Add(CookieTaken);
             Players[OtherPlayerNo].Oven.RemoveAt(CookieIndexGen);
 
