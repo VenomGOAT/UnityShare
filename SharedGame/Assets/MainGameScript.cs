@@ -230,6 +230,7 @@ public class MainGameScript : MonoBehaviour
 
     void Update()
     {
+        ClickableScript.UseAbilityCanInteract = false;
         UpdateScoreText();
         Players[0].CanBake.Clear();
         if (Players[0].Cards.Count == 7)
@@ -567,7 +568,7 @@ public class MainGameScript : MonoBehaviour
         {
             foreach(Cookie cookie in player.Oven)
             {
-                if(round -  cookie.RoundsBaked > 50)
+                if(round -  cookie.RoundsBaked > 3)
                 {
                     cookie.value = (int)(cookie.value * (1 + (double)(cookie.RoundsBaked / 100)));
                     player.Cards.Add(cookie);
